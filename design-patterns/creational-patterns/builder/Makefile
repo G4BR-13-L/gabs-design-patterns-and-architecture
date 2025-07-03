@@ -3,13 +3,13 @@
 # Default target
 all: java rust
 
-# Run Java strategy example
+# Run Java builder example
 java:
 	@echo "Compiling and running Java builder example..."
 	@javac java_builder/*.java
 	@java -cp java_builder User
 
-# Run Rust strategy example
+# Run Rust builder example
 rust:
 	@echo "Running Rust builder example..."
 	@cd rust_builder && cargo run
