@@ -58,9 +58,10 @@ make clean  # Clean build artifacts
 
 * [x] Strategy Pattern (Java + Rust)
 * [ ] Observer Pattern
-* [ ] Builder Pattern
+* [x] Builder Pattern
 * [ ] Factory Method
-* [ ] Adapter, Bridge, Decorator...
+* [ ] Decorator Pattern
+* [ ] Adapter, Bridge...
 * [ ] Clean Architecture & DDD demos
 * [ ] Real-world applications & microservices (Rust + Spring Boot)
 
