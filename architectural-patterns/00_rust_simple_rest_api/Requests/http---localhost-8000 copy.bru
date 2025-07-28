@@ -1,0 +1,25 @@
+meta {
+  name: http://localhost:8000 copy
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8000/products
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "String",
+    "description": "String",
+    "price": 300,
+    "active": true,
+    "available": true
+  }
+}
+
+settings {
+  encodeUrl: true
+}
