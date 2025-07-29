@@ -45,6 +45,16 @@ pub async fn find_one_by_uuid(uuid: Uuid) -> Result<Product, Error> {
     })
 }
 
+pub async fn delete_one_by_uuid(uuid: Uuid) -> Result<(), Error> {
+    let client = connect_to_db().await?;
+
+    client
+        .execute("DELETE FROM t_product WHERE uuid = $1", &[&uuid])
+        .await?;
+
+    Ok(())
+}
+
 pub async fn save(product: Product) -> Result<Product, Error> {
     let client = connect_to_db().await?;
 

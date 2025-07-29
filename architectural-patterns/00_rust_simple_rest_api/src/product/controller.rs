@@ -20,6 +20,14 @@ async fn find_one(uuid: &str) -> Result<Json<Product>, Status> {
     }
 }
 
+#[delete("/products/<uuid>")]
+async fn delete_one(uuid: &str) -> Result<Json<&str>, Status> {
+    match service::delete_by_uuid(&uuid).await {
+        Ok(()) => Ok(Json(uuid)),
+        Err(_) => Err(Status::InternalServerError),
+    }
+}
+
 #[post("/products", format = "json", data = "<input>")]
 async fn create(input: Json<ProductInput>) -> Result<Json<Product>, Status> {
     let input = input.into_inner();
@@ -31,5 +39,5 @@ async fn create(input: Json<ProductInput>) -> Result<Json<Product>, Status> {
 }
 
 pub fn product_routes() -> Vec<Route> {
-    routes![list, create, find_one]
+    routes![list, create, find_one, delete_one]
 }
