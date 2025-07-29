@@ -3,25 +3,6 @@ use rocket::{get, launch, routes};
 use std::fs;
 use tokio_postgres::{Client, NoTls};
 
-pub async fn connect_to_db() -> Result<Client, tokio_postgres::Error> {
-    let (client, connection) = tokio_postgres::Config::new()
-        .host("localhost")
-        .port(5453)
-        .user("postgres")
-        .password("postgres")
-        .dbname("postgres")
-        .connect(NoTls)
-        .await?;
-
-    tokio::spawn(async move {
-        if let Err(e) = connection.await {
-            eprintln!("Connection error: {}", e);
-        }
-    });
-
-    Ok(client)
-}
-
 pub async fn check_table_exists(client: &Client) -> Result<bool, tokio_postgres::Error> {
     let rows = client
         .query(
@@ -59,13 +40,12 @@ pub async fn run_migrations(client: &Client) -> Result<(), Box<dyn std::error::E
     entries.reverse();
 
     for entry in entries {
-        
         let path = entry.path();
 
         let file_name = path
             .file_name()
-            .ok_or("Invalid file name")? // handle None properly
-            .to_string_lossy(); // convert OsStr to Cow<str>
+            .ok_or("Invalid file name")?
+            .to_string_lossy();
 
         println!("{}", file_name);
 

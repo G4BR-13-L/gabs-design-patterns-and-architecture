@@ -2,22 +2,34 @@ use crate::product;
 use crate::product::product::{Product, ProductInput};
 use crate::product::service;
 use chrono::NaiveDateTime;
-use rocket::{get, post, routes, serde::json::Json, Route};
+use rocket::{get, http::Status, post, response::status, routes, serde::json::Json, Route};
 
 #[get("/products")]
-fn list() -> String {
-    service::list_products()
+async fn list() -> Result<Json<Vec<Product>>, Status> {
+    match service::list_products().await {
+        Ok(products) => Ok(Json(products)),
+        Err(_) => Err(Status::InternalServerError),
+    }
+}
+
+#[get("/products/<uuid>")]
+async fn find_one(uuid: &str) -> Result<Json<Product>, Status> {
+    match service::find_by_uuid(&uuid).await {
+        Ok(product) => Ok(Json(product)),
+        Err(_) => Err(Status::InternalServerError),
+    }
 }
 
 #[post("/products", format = "json", data = "<input>")]
-async fn create(input: Json<ProductInput>) -> String {
+async fn create(input: Json<ProductInput>) -> Result<Json<Product>, Status> {
     let input = input.into_inner();
 
-    let product: Product = service::create(input).await;
-
-    format!("Product created {}", product.uuid)
+    match service::create(input).await {
+        Ok(product) => Ok(Json(product)),
+        Err(_) => Err(Status::InternalServerError),
+    }
 }
 
 pub fn product_routes() -> Vec<Route> {
-    routes![list, create]
+    routes![list, create, find_one]
 }

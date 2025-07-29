@@ -3,11 +3,16 @@ extern crate rocket;
 
 use rocket::{get, routes, Rocket};
 use rust_simple_rest_api::configuration::migrations::{
-    check_table_exists, connect_to_db, create_migration_table, run_migrations,
+    check_table_exists, create_migration_table, run_migrations,
 };
 use rust_simple_rest_api::product::controller::product_routes;
 use std::fs;
 use std::path::Path;
+
+mod configuration;
+mod utils;
+
+use configuration::db::connect_to_db;
 
 #[launch]
 async fn rocket() -> _ {
